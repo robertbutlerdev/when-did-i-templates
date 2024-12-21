@@ -1,0 +1,20 @@
+{
+  "$schema": "./node_modules/@rocketmakers/orbit-template-http-repository/lib/serviceJsonSchema.json",
+  "partials": {
+    "header": {
+      "path": "partials/html/header.handlebars"
+    },
+    "footer": {
+      "path": "partials/html/footer.handlebars"
+    },
+    "styles": {
+      "path": "partials/html/styles.handlebars"
+    }
+  },
+  "layouts": {
+    "magicLink": {
+      "path": "layouts/magicLink",
+      "templates": ["html", "txt"]
+    }
+  }
+}
