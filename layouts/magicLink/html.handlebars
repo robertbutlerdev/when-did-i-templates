@@ -1,14 +1,14 @@
 <html>
   <head>
-    <title>Magic link to When Did I</title>
+    <title>Login code for When Did I</title>
     {{> styles}}
   </head>
   <body>
     <div class="when-did-i-msg">
       <div class="when-did-i-space-top">
-        <p>You have requested to login to When Did I.</p>
+        <p>You have requested a login code to When Did I.</p>
       </div>
-      <a href={{returnUrl}} class="when-did-i-button when-did-i-space-top" target="_blank" rel="noopener noreferrer">Login</a>
+      <div class="when-did-i-code when-did-i-space-top">{{code}}</div>
       {{> footer}}
     </div>
   </body>
