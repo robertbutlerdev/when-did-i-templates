@@ -4,14 +4,14 @@
  * @examples require(".").sampleData
  */
 export interface IModel {
-  returnUrl: string
+  code: string
 }
 
 export const sampleData: IModel[] = [
   {
-    returnUrl: "https://www.rocketmakers.com"
+    code: "123456"
   },
   {
-    returnUrl: "https://www.rocketmakers.com"
+    code: "654321"
   },
 ]
