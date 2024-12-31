@@ -12,8 +12,8 @@
     }
   },
   "layouts": {
-    "magicLink": {
-      "path": "layouts/magicLink",
+    "loginCode": {
+      "path": "layouts/loginCode",
       "templates": ["html", "txt"]
     }
   }
