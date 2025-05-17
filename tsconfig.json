@@ -6,11 +6,11 @@
       "esnext.asynciterable"
     ],
     "target": "es6",
-    "module": "commonjs",
+    "module": "Node16",
     "isolatedModules": false,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "moduleResolution": "node",
+    "moduleResolution": "node16",
     "removeComments": true,
     "sourceMap": true,
     "strict": true,

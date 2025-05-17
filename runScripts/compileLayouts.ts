@@ -1,11 +1,12 @@
 #!/usr/bin/env ts-node
 
 import * as handlebars from "handlebars"
-import * as Ajv from "ajv"
+import Ajv from "ajv"
 import * as path from "path"
-import { setDefaultLoggerLevel, createLogger } from "@rocketmakers/shell-commands/lib/logger"
-import { Args } from "@rocketmakers/shell-commands/lib/args"
-import { FileSystem } from "@rocketmakers/shell-commands/lib/fs"
+import { setDefaultLoggerLevel, createLogger } from "@rocketmakers/shell/logger"
+import * as  Args from "@rocketmakers/shell/args"
+import {mkdir, readFile, writeFile} from 'fs/promises'
+import {existsSync} from 'fs'
 
 const logger = createLogger("generate-schemas")
 
@@ -37,9 +38,9 @@ async function run() {
   setDefaultLoggerLevel(log as any)
 
   const fileName = `${serviceName}.json`
-  const serviceJson = JSON.parse(FileSystem.readFile(fileName))
+  const serviceJson = JSON.parse(await readFile(fileName, {'encoding': 'utf8'}))
 
-  const serviceJsonSchema = JSON.parse(FileSystem.readFile("node_modules/@rocketmakers/orbit-template-http-repository/lib/serviceJsonSchema.json"))
+  const serviceJsonSchema = JSON.parse(await readFile("node_modules/@rocketmakers/orbit-template-http-repository/lib/serviceJsonSchema.json", {encoding: 'utf8'})) 
 
   const ajv = new Ajv({ allErrors: true, verbose: true })
   const validServiceJson = ajv.validate(serviceJsonSchema, serviceJson)
@@ -53,7 +54,7 @@ async function run() {
   logger.info("Registering partials --> ")
 
   for (const partial in partials) {
-    const content = FileSystem.readFile(partials[partial].path)
+    const content = await readFile(partials[partial].path, {encoding: 'utf8'})
     handlebars.registerPartial(partial, content)
     logger.info("Registered partial: ", partial)
   }
@@ -62,18 +63,18 @@ async function run() {
 
   for (const layout in layouts) {
     layouts[layout].templates.forEach(async (template: string) => {
-      const content = FileSystem.readFile(`${layouts[layout].path}/${template}.handlebars`)
+      const content = await readFile(`${layouts[layout].path}/${template}.handlebars`, {'encoding': 'utf8'})
 
-      const data = JSON.parse(FileSystem.readFile(`${layouts[layout].path}/payloadSchema.json`)).examples[0]
+      const data = JSON.parse(await readFile(`${layouts[layout].path}/payloadSchema.json`, {'encoding': 'utf-8'})).examples[0]
       const compile = handlebars.compile(content, { strict: true })
 
       try {
         const res = compile(data)
         const dir = path.join(__dirname, "../compiledLayouts")
-        if (!FileSystem.exists(dir)) {
-          await FileSystem.makeDirectory(dir)
+        if (!existsSync(dir)) {
+          await mkdir(dir)
         }
-        await FileSystem.writeFileAsync(path.join(dir, `${layout}.${template}`), res)
+        await writeFile(path.join(dir, `${layout}.${template}`), res)
         logger.trace("Compiled template: ", res)
       } catch (error: any) {
         throw new Error(error)
